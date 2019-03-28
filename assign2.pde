@@ -19,8 +19,6 @@ PImage restartNormalImg;
 final int GAME_START = 0;
 final int GAME_RUN = 1;
 final int GAME_LOSE = 2;
-final int GET_SCCORE = 3;
-final int LOST_SCCORE = 4;
 int gameState = GAME_START;
 
 final int BUTTON_TOP = 360;
@@ -30,9 +28,15 @@ final int BUTTON_RIGHT = 392;
 
 boolean upPressed, downPressed, rightPressed, leftPressed;
 
-int lifeAmount = 2;
+float lifeAmount = 2;
 int cabbageX;
 int cabbageY;
+int firstLifeX = 10;
+int firstLifeY = 10;
+int secondLifeX = 80;
+int secondLifeY = 10;
+int thirdLifeX = 150;
+int thirdLifeY = 10;
 float soldierX = 40;
 float soldierY;
 float groundhogX;
@@ -90,12 +94,10 @@ void draw() {
     case GAME_RUN:
     
       image(bgImg,0,0);
-      image(firstLifeImg,10,10);
-      image(secondLifeImg,80,10);
-      image(thirdLifeImg,150,10);
+      image(firstLifeImg,firstLifeX,firstLifeY);
+      image(secondLifeImg,secondLifeX,secondLifeY);
       image(soilImg,0,160);
       image(cabbageImg,cabbageX,cabbageY);
-      
       
       //grass
       noStroke();
@@ -109,8 +111,6 @@ void draw() {
       fill(253,184,19);//orange
       ellipse(590,50,120,120);
       
-      
-      
       //soldier
       image(soldierImg,soldierX,soldierY);
       soldierX += 3;
@@ -120,9 +120,8 @@ void draw() {
       
       //cabbage
       if(cabbageX == groundhogX && cabbageY == groundhogY){
-        cabbageX = -cabbageX;
-        lifeAmount = lifeAmount +1;
-        
+        cabbageY = -cabbageY;
+        lifeAmount  = lifeAmount + 1;
       }
       
       //groundhog
@@ -155,12 +154,21 @@ void draw() {
       && groundhogY < soldierY +80 && groundhogY +80 > soldierY){
         groundhogX = 320;
         groundhogY = 80;
-        gameState = GAME_RUN;
         lifeAmount = lifeAmount-1;
       }
-        
       
-     
+      if(lifeAmount == 3){
+        image(thirdLifeImg,thirdLifeX,thirdLifeY);
+      }else{
+        thirdLifeX = -thirdLifeX;
+      }
+      if(lifeAmount == 1 ){
+        secondLifeX = secondLifeX + width;  
+      }
+      if(lifeAmount <= 0){
+        gameState = GAME_LOSE;
+      }
+      
     break;
     
     
@@ -170,7 +178,14 @@ void draw() {
       if(mouseX > BUTTON_LEFT && mouseX < BUTTON_RIGHT
       && mouseY > BUTTON_TOP && mouseY < BUTTON_BOTTOM){
         image(restartHoveredImg,248,360);
-        if(mousePressed)gameState = GAME_RUN;
+        if(mousePressed){
+          gameState = GAME_RUN;
+          soldierY = floor(random(2,6))*80;
+          cabbageX = floor(random(0,8))*80;
+          cabbageY = floor(random(2,6))*80;
+          lifeAmount = 2;
+          secondLifeX = 80;
+        }
       }else{
         image(restartNormalImg,248,360);
       }
