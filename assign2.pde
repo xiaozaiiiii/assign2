@@ -39,6 +39,8 @@ int thirdLifeX = 150;
 int thirdLifeY = 10;
 float soldierX = 40;
 float soldierY;
+float groundhogIdleX;
+float groundhogIdleY;
 float groundhogX;
 float groundhogY;
 float groundhogSpeed = 5;
@@ -73,6 +75,7 @@ void setup() {
   cabbageY = floor(random(2,6))*80;
   groundhogX = 320;
   groundhogY = 80;
+  
   
 }
 
@@ -125,10 +128,13 @@ void draw() {
       }
       
       //groundhog
-      image(groundhogIdleImg,groundhogX,groundhogY);
+      image(groundhogIdleImg,groundhogIdleX,groundhogIdleY);
+      groundhogIdleX = groundhogX;
+      groundhogIdleY = groundhogY;
       
       if(downPressed){
         image(groundhogDownImg,groundhogX,groundhogY);
+        groundhogIdleX = groundhogIdleX + width;
         groundhogY += groundhogSpeed;
         if(groundhogY + groundhogWidth > height) {
           groundhogY = height - groundhogWidth;
@@ -136,6 +142,7 @@ void draw() {
       }
       if(leftPressed){
         image(groundhogLeftImg,groundhogX,groundhogY);
+        groundhogIdleX = groundhogIdleX + width;
         groundhogX -= groundhogSpeed;
         if(groundhogX < 0) {
           groundhogX = 0;
@@ -143,6 +150,7 @@ void draw() {
       }
       if(rightPressed){
         image(groundhogRightImg,groundhogX,groundhogY);
+        groundhogIdleX = groundhogIdleX + width;
         groundhogX += groundhogSpeed;
         if(groundhogX + groundhogWidth > width) {
           groundhogX = width - groundhogWidth;
@@ -213,18 +221,21 @@ void keyReleased(){
   switch(keyCode){
     case DOWN:
     downPressed = false;
+    groundhogIdleX = groundhogX;
     if(groundhogY % 80 != 0){
       groundhogY = (floor(groundhogY / 80)+1)*80;
     }
     break;
     case RIGHT:
     rightPressed = false;
+    groundhogIdleX = groundhogX;
     if(groundhogX % 80 != 0){
       groundhogX = (floor(groundhogX / 80)+1)*80;
     }
     break;
     case LEFT:
     leftPressed = false;
+    groundhogIdleX = groundhogX;
     if(groundhogX % 80 != 0){
       groundhogX = floor(groundhogX / 80)*80;
     }
